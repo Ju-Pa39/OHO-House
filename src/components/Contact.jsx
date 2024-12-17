@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios'; // เพิ่ม Axios
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,26 +9,34 @@ const Contact = () => {
     message: ''
   });
 
+  const [isLoading, setIsLoading] = useState(false); 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to your server
-    console.log('Form submitted:', formData);
-    // Reset form after submission
-    setFormData({ name: '', email: '', phone: '', message: '' });
-    alert('ขอบคุณสำหรับข้อความของคุณ เราจะติดต่อกลับโดยเร็วที่สุด');
+  
+    try {
+      const response = await axios.post("http://localhost:8000/contact/createContact", formData);
+      // console.log("Response from server:", response.data);
+      console.log(formData)
+      alert("ขอบคุณสำหรับข้อความของคุณ เราจะติดต่อกลับโดยเร็วที่สุด");
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch (error) {
+      console.error("Error:", error);
+      alert("เกิดข้อผิดพลาด โปรดลองอีกครั้ง");
+    }
   };
 
   return (
     <div className="bg-white">
-      {/* Header */}
+     
       <section className="relative py-20 bg-gray-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -46,11 +55,10 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Contact Information and Form */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap -mx-4">
-            {/* Contact Information */}
+           
             <div className="w-full lg:w-1/3 px-4 mb-8 lg:mb-0">
               <h2 className="text-2xl font-bold mb-6">ข้อมูลการติดต่อ</h2>
               <div className="mb-6">
@@ -95,7 +103,7 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Contact Form */}
+          
             <div className="w-full lg:w-2/3 px-4">
               <h2 className="text-2xl font-bold mb-6">ส่งข้อความถึงเรา</h2>
               <form onSubmit={handleSubmit} className="space-y-4">

@@ -14,7 +14,7 @@ export default function App() {
    <Home />
    <Services />
    <Portfolio />
-   <About />
+   <About />  
    <Contact />
    <Footer />
    </>
